@@ -1,3 +1,4 @@
+import 'package:booksy/home/book_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -84,6 +85,13 @@ class _HomePageState extends State<HomePage> {
                   );
                 },
               ),
+            ),
+            ListView.builder(
+              itemCount: categorias.length,
+              shrinkWrap: true,
+              itemBuilder: (context, index){
+                return BookWidget();
+              },
             )
           ],
         ),
