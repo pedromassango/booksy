@@ -3,7 +3,7 @@ import 'package:flutter/widgets.dart';
 
 class BookWidget extends StatelessWidget {
 
-  String imageUrl = "https://images.unsplash.com/photo-1535498730771-e735b998cd64?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80";
+  final String imageUrl = "https://images.unsplash.com/photo-1535498730771-e735b998cd64?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80";
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +15,10 @@ class BookWidget extends StatelessWidget {
         children: <Widget>[
           Align(
             alignment: Alignment.centerRight,
-            child: Container(
+            child: ClipRRect(
+              borderRadius: BorderRadius.all(
+                Radius.circular(12)
+              ),
               child: Image.network(
                 imageUrl,
                 fit: BoxFit.fill,
