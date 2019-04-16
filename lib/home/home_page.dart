@@ -1,4 +1,4 @@
-import 'package:booksy/home/book_widget.dart';
+import 'package:booksy/widgets/book_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
