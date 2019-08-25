@@ -14,22 +14,29 @@ class Repository{
 
   Future<HomePageState> getBooks(String query) async{
 
-    final url = "$baseUrl?q=$query";
-    var response = await http.get(url);
+    try {
+      final url = "$baseUrl?q=$query";
+      var response = await http.get(url);
 
-    if(response.statusCode == 200){
-      var body = response.body;
-      var json = converter.jsonDecode(body);
-      var data = BooksApiModel.fromJson(json);
+      if (response.statusCode == 200) {
+        var body = response.body;
+        var json = converter.jsonDecode(body);
+        var data = BooksApiModel.fromJson(json);
 
-      var books = data.items;
+        var books = data.items;
 
-      return HomePageStateSuccess(
-        books: books
-      );
-    }else{
+        return HomePageStateSuccess(
+            books: books
+        );
+      } else {
+        return HomePageStateError(
+            message: "Internet Error!"
+        );
+      }
+    }catch(e) {
+      print(e);
       return HomePageStateError(
-        message: "Internet Error!"
+        message: 'Unknown error'
       );
     }
   }

@@ -22,6 +22,15 @@ class _HomePageState extends State<HomePage> {
 
   int _selectedIndex = 0;
 
+  _onCategorySelected(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+
+    final category = categorias[index];
+    _bloc.dispatch(HomePageEventSearch(query: category));
+  }
+
   @override
   void initState() {
     super.initState();
@@ -77,10 +86,7 @@ class _HomePageState extends State<HomePage> {
                         left: 6, right: 6
                     ),
                     child: GestureDetector(
-                      onTap: (){
-                        _selectedIndex = index;
-                        setState((){});
-                      },
+                      onTap: () => _onCategorySelected(index),
                       child: Chip(
                         padding: EdgeInsets.only(
                             left: 8, right: 8
@@ -109,13 +115,13 @@ class _HomePageState extends State<HomePage> {
 
                 if(state is HomePageStateSuccess) {
                   final books = state.books;
-                  //TODO: terminar implementação do item de livro.
                   return Expanded(
                     child: Container(
                       child: ListView.builder(
                         itemCount: books.length,
-                        itemBuilder: (context, index){
-                          return BookWidget();
+                        itemBuilder: (context, index) {
+                          final item = books.elementAt(index);
+                          return BookWidget(book: item);
                         },
                       ),
                     ),
@@ -130,4 +136,5 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
+
 }

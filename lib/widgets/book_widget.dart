@@ -1,9 +1,19 @@
+import 'package:booksy/models.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 class BookWidget extends StatelessWidget {
 
+  final Book book;
+  VolumeInfo get _bookInfo => book.volumeInfo;
+
   final String imageUrl = "https://images.unsplash.com/photo-1535498730771-e735b998cd64?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80";
+
+  const BookWidget({
+    Key key,
+    @required this.book
+  }) : assert(book != null),
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -15,14 +25,17 @@ class BookWidget extends StatelessWidget {
         children: <Widget>[
           Align(
             alignment: Alignment.centerRight,
-            child: ClipRRect(
-              borderRadius: BorderRadius.all(
-                Radius.circular(12)
-              ),
-              child: Image.network(
-                imageUrl,
-                fit: BoxFit.fill,
-                width: 200,
+            child: Container(
+              width: 200,
+              decoration: BoxDecoration(
+                border: Border.all(width: 0.5),
+                  borderRadius: BorderRadius.all(
+                  Radius.circular(12)
+                  ),
+                image: DecorationImage(
+                  fit: BoxFit.fill,
+                  image: NetworkImage(_bookInfo.imageLinks.smallThumbnail)
+                )
               ),
             ),
           ),
@@ -49,13 +62,15 @@ class BookWidget extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: <Widget>[
-                  Text("Book Title",
+                  Text(_bookInfo.title,
+                    maxLines: 3,
+                    overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold
                     ),
                   ),
-                  Text("book author",
+                  Text(_bookInfo.authors[0],
                     style: TextStyle(
                       color: Colors.grey
                     ),

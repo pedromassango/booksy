@@ -134,7 +134,7 @@ class VolumeInfo {
   ReadingModes _readingModes;
   int _pageCount;
   String _printType;
-  int _averageRating;
+  double _averageRating;
   int _ratingsCount;
   String _maturityRating;
   bool _allowAnonLogging;
@@ -154,7 +154,7 @@ class VolumeInfo {
         ReadingModes readingModes,
         int pageCount,
         String printType,
-        int averageRating,
+        double averageRating,
         int ratingsCount,
         String maturityRating,
         bool allowAnonLogging,
@@ -201,8 +201,8 @@ class VolumeInfo {
   set pageCount(int pageCount) => _pageCount = pageCount;
   String get printType => _printType;
   set printType(String printType) => _printType = printType;
-  int get averageRating => _averageRating;
-  set averageRating(int averageRating) => _averageRating = averageRating;
+  double get averageRating => _averageRating;
+  set averageRating(double averageRating) => _averageRating = averageRating;
   int get ratingsCount => _ratingsCount;
   set ratingsCount(int ratingsCount) => _ratingsCount = ratingsCount;
   String get maturityRating => _maturityRating;
