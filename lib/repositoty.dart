@@ -1,7 +1,7 @@
 
 import 'dart:async';
 
-import 'package:booksy/home/bloc/HomePageState.dart';
+import 'package:booksy/home/bloc/home_page_state.dart';
 import 'package:booksy/models.dart';
 
 import 'package:http/http.dart' as http;

@@ -2,8 +2,8 @@ import 'package:bloc/bloc.dart';
 import 'package:booksy/repositoty.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:booksy/home/bloc/HomePageEvent.dart';
-import 'package:booksy/home/bloc/HomePageState.dart';
+import 'package:booksy/home/bloc/home_page_event.dart';
+import 'package:booksy/home/bloc/home_page_state.dart';
 import 'package:meta/meta.dart';
 
 class HomePageBloc extends Bloc<HomePageEvent, HomePageState>{
