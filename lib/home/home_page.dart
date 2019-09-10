@@ -103,7 +103,7 @@ class _HomePageState extends State<HomePage> {
                 },
               ),
             ),
-            BlocBuilder<HomePageEvent, HomePageState>(
+            BlocBuilder<HomePageBloc, HomePageState>(
               bloc: _bloc,
               builder: (context, state) {
 
