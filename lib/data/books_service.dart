@@ -1,18 +1,14 @@
 
-import 'dart:async';
-
-import 'package:booksy/home/bloc/home_page_state.dart';
-import 'package:booksy/models.dart';
-
+import 'package:booksy/models/books_api_model.dart';
+import 'package:booksy/models/result.dart';
+import 'dart:convert' as converter;
 import 'package:http/http.dart' as http;
 
-import 'dart:convert' as converter;
-
-class Repository{
+class BooksService {
 
   final String baseUrl = "https://www.googleapis.com/books/v1/volumes";
 
-  Future<HomePageState> getBooks(String query) async{
+  Future<Result<List<Book>, String>> getBooks(String query) async {
 
     try {
       final url = "$baseUrl?q=$query";
@@ -25,19 +21,13 @@ class Repository{
 
         var books = data.items;
 
-        return HomePageStateSuccess(
-            books: books
-        );
+        return Result.success(books);
       } else {
-        return HomePageStateError(
-            message: "Internet Error!"
-        );
+        return Result.error('Internet Error!');
       }
     }catch(e) {
       print(e);
-      return HomePageStateError(
-        message: 'Unknown error'
-      );
+      return Result.error('Unknown error');
     }
   }
 }

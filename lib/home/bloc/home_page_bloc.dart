@@ -1,9 +1,8 @@
 import 'package:bloc/bloc.dart';
-import 'package:booksy/repositoty.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-
+import 'package:booksy/data/repositoty.dart';
 import 'package:booksy/home/bloc/home_page_event.dart';
 import 'package:booksy/home/bloc/home_page_state.dart';
+import 'package:booksy/models/result.dart';
 import 'package:meta/meta.dart';
 
 class HomePageBloc extends Bloc<HomePageEvent, HomePageState>{
@@ -12,19 +11,26 @@ class HomePageBloc extends Bloc<HomePageEvent, HomePageState>{
 
   HomePageBloc({
     @required this.repository
-});
+  }) : assert(repository != null);
+
+  HomePageState _state = HomePageState.initial();
 
   @override
-  HomePageState get initialState => HomePageStateLoading();
+  HomePageState get initialState => HomePageState.initial();
 
   @override
   Stream<HomePageState> mapEventToState(HomePageEvent event) async* {
-    if(event is HomePageEventSearch){
-      yield HomePageStateLoading();
+    if(event is HomePageSearchEvent) {
+      _state = _state.copy(
+          category: event.category,
+          books: Result.loading());
+      yield _state;
 
-      var query = event.query;
+      var query = event.category;
       var booksResult = await repository.getBooks(query);
-      yield booksResult;
+
+      _state = _state.copy(books: booksResult);
+      yield _state;
     }
   }
 }

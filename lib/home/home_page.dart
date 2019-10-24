@@ -1,47 +1,22 @@
 import 'package:booksy/home/bloc/home_page_event.dart';
 import 'package:booksy/home/bloc/home_page_state.dart';
 import 'package:booksy/home/bloc/home_page_bloc.dart';
-import 'package:booksy/repositoty.dart';
+import 'package:booksy/models/result_status.dart';
 import 'package:booksy/widgets/book_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class HomePage extends StatefulWidget {
-  @override
-  _HomePageState createState() => _HomePageState();
-}
+class HomePage extends StatelessWidget {
 
-class _HomePageState extends State<HomePage> {
-  HomePageBloc _bloc;
-
-  List<String> categorias = [
-    "Android", "Java", "História", "Ciências", "Myths", "Typograpyh"
+  final List<String> categories = [
+    "Android",
+    "Java",
+    "História",
+    "Ciências",
+    "Myths",
+    "Typograpyh"
   ];
-
-  int _selectedIndex = 0;
-
-  _onCategorySelected(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-
-    final category = categorias[index];
-    _bloc.dispatch(HomePageEventSearch(query: category));
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    SystemChrome.setEnabledSystemUIOverlays([]);
-
-    _bloc = HomePageBloc(repository: Repository());
-
-    _bloc.dispatch(HomePageEventSearch(
-      query: categorias[0]
-    ));
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,9 +29,7 @@ class _HomePageState extends State<HomePage> {
             Row(
               children: <Widget>[
                 Padding(
-                  padding: const EdgeInsets.only(
-                      right: 24
-                  ),
+                  padding: const EdgeInsets.only(right: 24),
                   child: Text("Browse",
                     style: TextStyle(
                         fontSize: 32,
@@ -73,61 +46,67 @@ class _HomePageState extends State<HomePage> {
                 )
               ],
             ),
-            Container(
-              width: MediaQuery.of(context).size.width,
-              height: 80,
-              child: ListView.builder(
-                shrinkWrap: true,
-                itemCount: categorias.length,
-                scrollDirection: Axis.horizontal,
-                itemBuilder: (BuildContext c, int index){
-                  return Padding(
-                    padding: const EdgeInsets.only(
-                        left: 6, right: 6
-                    ),
-                    child: GestureDetector(
-                      onTap: () => _onCategorySelected(index),
-                      child: Chip(
-                        padding: EdgeInsets.only(
-                            left: 8, right: 8
-                        ),
-                        backgroundColor: index == _selectedIndex ? Colors.blue : Colors.grey[200],
-                        label: Text(categorias.elementAt(index),
-                          style: TextStyle(
-                              color: index == _selectedIndex ? Colors.white : Colors.grey[500]
+            BlocBuilder<HomePageBloc, HomePageState>(
+              bloc: BlocProvider.of<HomePageBloc>(context),
+              builder: (context, state) {
+                return Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: 80,
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: categories.length,
+                    scrollDirection: Axis.horizontal,
+                    itemBuilder: (BuildContext c, int index) {
+                      final category = categories.elementAt(index);
+                      final isSelectedCategory = category == state.category;
+
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 6),
+                        child: GestureDetector(
+                          onTap: () {
+                            BlocProvider.of<HomePageBloc>(context)
+                                .dispatch(HomePageSearchEvent(category: category));
+                          },
+                          child: Chip(
+                            padding: const EdgeInsets.symmetric(horizontal: 8),
+                            backgroundColor: isSelectedCategory ? Colors.blue : Colors.grey[200],
+                            label: Text(category,
+                              style: TextStyle(
+                                  color: isSelectedCategory ? Colors.white : Colors.grey[500]
+                              ),
+                            ),
                           ),
                         ),
-                      ),
-                    ),
-                  );
-                },
-              ),
+                      );
+                    },
+                  ),
+                );
+              },
             ),
             BlocBuilder<HomePageBloc, HomePageState>(
-              bloc: _bloc,
+              bloc: BlocProvider.of<HomePageBloc>(context),
               builder: (context, state) {
 
-                if(state is HomePageStateLoading)
+                if(state.books.status == ResultStatus.loading)
                   return Center(child: CircularProgressIndicator());
 
-                if(state is HomePageStateError)
-                  return Center(child: Text(state.message));
+                if(state.books.status == ResultStatus.failed)
+                  return Center(child: Text(state.books.error));
 
-                if(state is HomePageStateSuccess) {
+                if(state.books.status == ResultStatus.success) {
                   final books = state.books;
                   return Expanded(
                     child: Container(
                       child: ListView.builder(
-                        itemCount: books.length,
+                        itemCount: books.data.length,
                         itemBuilder: (context, index) {
-                          final item = books.elementAt(index);
+                          final item = books.data.elementAt(index);
                           return BookWidget(book: item);
                         },
                       ),
                     ),
                   );
                 }
-
                 return SizedBox.shrink();
               },
             ),

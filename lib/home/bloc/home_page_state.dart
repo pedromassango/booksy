@@ -1,34 +1,31 @@
-import 'package:booksy/models.dart';
+import 'package:booksy/models/books_api_model.dart';
+import 'package:booksy/models/result.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
-class HomePageState extends Equatable{
-  HomePageState([ List tmp = const []]): super(tmp);
-}
+class HomePageState extends Equatable {
 
-class HomePageStateLoading extends HomePageState{
+  final String category;
+  final Result<List<Book>, String> books;
 
-  @override
-  String toString() => "HomePageStateLoading";
-}
+  HomePageState({
+    @required this.books,
+    @required this.category
+  }) : super([books, category]);
 
-class HomePageStateSuccess extends HomePageState{
-  final List<Book> books;
-  HomePageStateSuccess({
-    @required this.books
-});
+  factory HomePageState.initial() {
+    return HomePageState(
+      books: Result.idle(data: []),
+      category: ''
+    );
+  }
 
-  @override
-  String toString() => "HomePageStateSuccess";
-}
-
-class HomePageStateError extends HomePageState{
-  final String message;
-
-  HomePageStateError({
-   @required this.message
-});
-
-  @override
-  String toString() => "HomePageStateError";
+  HomePageState copy({
+    String category,
+    Result<List<Book>, String> books}) {
+    return HomePageState(
+      category: category ?? this.category,
+      books: books ?? this.books
+    );
+  }
 }

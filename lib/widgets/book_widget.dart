@@ -1,4 +1,4 @@
-import 'package:booksy/models.dart';
+import 'package:booksy/models/books_api_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
